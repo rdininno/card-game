@@ -60,13 +60,11 @@ export default function Home() {
       setPlayPile([...playPile, selectedCard]);
       setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
       setGameState(updatedGameState);
-      return;
     } else if (selectedCard.value === "3") {
       alert("Invisible! The next player must play on the card below.");
       setPlayPile([...playPile, selectedCard]);
       setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
       setGameState(updatedGameState);
-      return;
     } else if (selectedCard.value === "10") {
       if (topCard && topCard.value === "10" && selectedCard.value !== "10") {
         alert("You must play a 10 on a 10! Pick up the pile.");
@@ -74,7 +72,6 @@ export default function Home() {
         setPlayPile([]);
         setGameState(updatedGameState);
         setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
-        return;
     }
     } else if (selectedCard.value === "8") {
       alert("Player skipped!");
@@ -86,17 +83,21 @@ export default function Home() {
       }, 100); 
 
       setGameState(updatedGameState);
-      return;
     } 
 
     setPlayPile([...playPile, ...selectedCards]);
 
+    const playerHand = updatedGameState.table[playerIndex].hand.inHand;
     const cardsPlayed = selectedCards.length;
-
-    for (let i = 0; i < cardsPlayed; i++) {
-      if (updatedGameState.drawPile.length > 0) {
-        const newCard = updatedGameState.drawPile.pop();
-        updatedGameState.table[playerIndex].hand.inHand.push(newCard);
+    
+    if (updatedGameState.drawPile.length > 0) {
+      if (playerHand.length >= 3) {
+        playerHand.push(updatedGameState.drawPile.pop());
+      } else {
+        const cardsToPickUp = Math.min(cardsPlayed, updatedGameState.drawPile.length);
+        for (let i = 0; i < cardsToPickUp; i++) {
+          playerHand.push(updatedGameState.drawPile.pop());
+        }
       }
     }
 
