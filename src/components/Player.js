@@ -3,10 +3,10 @@
 import React from "react";
 import Card from "./Card";
 
-const Player = ({ name, hand }) => {
+const Player = ({ name, hand, playerIndex, isCurrentPlayer, handleCardClick }) => {
     return (
-        <div>
-            <h2>{name}</h2>
+        <div style={{ border: "1px solid black", padding: "10px", marginBottom: "20px" }}>
+            <h2>{name} {isCurrentPlayer ? "(Your Turn)" : ""}</h2>
 
             <h3>Face-Down Cards:</h3>
             <div style={{ display: "flex", gap: "10px" }}>
@@ -22,10 +22,10 @@ const Player = ({ name, hand }) => {
                 ))}
             </div>
 
-            <h3>In-Hand Cards:</h3>
+            <h3>In-Hand Cards (Click to Play):</h3>
             <div style={{ display: "flex", gap: "10px" }}>
                 {hand.inHand.map((card, i) => (
-                    <Card key={i} suit={card.suit} value={card.value} />
+                    <Card key={i} suit={card.suit} value={card.value} onClick={() => handleCardClick(playerIndex, i)} />
                 ))}
             </div>
         </div>

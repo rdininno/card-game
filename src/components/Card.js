@@ -1,8 +1,10 @@
+"use client";
+
 import react from "react";
 
-const Card = ({ suit, value, hidden = false }) => {
+const Card = ({ suit, value, hidden = false, onClick }) => {
     return (
-        <div>
+        <div onClick={onClick}>
             {hidden ? "🂠" : `${value} of ${suit}`}
         </div>
     );
