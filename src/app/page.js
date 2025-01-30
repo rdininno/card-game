@@ -21,13 +21,17 @@ export default function Home() {
     const updatedGameState = {...gameState};
 
     let selectedCard;
+    let selectedCards = [];
 
     if (fromFaceDown) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceDown[cardIndex];
+      selectedCards = [selectedCard];
     } else if (fromFaceUp) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceUp[cardIndex];
+      selectedCards = updatedGameState.table[playerIndex].hand.faceUp.filter(card => card.value === selectedCard.value);
     } else {
       selectedCard = updatedGameState.table[playerIndex].hand.inHand[cardIndex];
+      selectedCards = updatedGameState.table[playerIndex].hand.inHand.filter(card => card.value === selectedCard.value);
     }
 
     const topCard = playPile.length > 0 ? playPile[playPile.length - 1] : null;
@@ -42,11 +46,11 @@ export default function Home() {
     }
 
     if (fromFaceDown) {
-      updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
+      updatedGameState.table[playerIndex].hand.faceDown = updatedGameState.table[playerIndex].hand.faceDown.filter(card => card.value !== selectedCard.value);
     } else if (fromFaceUp) {
-      updatedGameState.table[playerIndex].hand.faceUp.splice(cardIndex, 1);
+      updatedGameState.table[playerIndex].hand.faceUp = updatedGameState.table[playerIndex].hand.faceUp.filter(card => card.value !== selectedCard.value);
     } else {
-      updatedGameState.table[playerIndex].hand.inHand.splice(cardIndex, 1);
+      updatedGameState.table[playerIndex].hand.inHand = updatedGameState.table[playerIndex].hand.inHand.filter(card => card.value !== selectedCard.value);
     }
 
     if (selectedCard.value === "2") {
