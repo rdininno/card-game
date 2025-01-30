@@ -12,26 +12,56 @@ export default function Home() {
     const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
     const [playPile, setPlayPile] = useState([]);
     
-    const handleCardClick = (playerIndex, cardIndex) => {
+    const handleCardClick = (playerIndex, cardIndex, fromFaceUp = false, fromFaceDown = false) => {
       if (playerIndex !== currentPlayerIndex) {
         alert("It's not your turn!");
         return;
       }
 
-      const selectedCard = gameState.table[playerIndex].hand.inHand[cardIndex];
-      
       const updatedGameState = {...gameState};
+      
+      let selectedCard;
 
-      updatedGameState.table[playerIndex].hand.inHand.splice(cardIndex, 1);
-
-      if (updatedGameState.table[playerIndex].hand.inHand.length < 3 && updatedGameState.drawPile.length > 0) {
+      if(fromFaceDown) {
+        selectedCard = updatedGameState.table[playerIndex].hand.faceDown[cardIndex];
+        updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
+      } else if (fromFaceUp) {
+        selectedCard = updatedGameState.table[playerIndex].hand.faceUp.splice(cardIndex, 1)[0];
+      } else {
+        selectedCard = gameState.table[playerIndex].hand.inHand[cardIndex];
+        updatedGameState.table[playerIndex].hand.inHand.splice(cardIndex, 1);
+      }
+      
+      setPlayPile([...playPile, selectedCard]);
+      
+      while (
+        updatedGameState.drawPile.length > 0 &&
+        updatedGameState.table[playerIndex].hand.inHand.length < 3
+      ) {
         const newCard = updatedGameState.drawPile.pop();
         updatedGameState.table[playerIndex].hand.inHand.push(newCard);
       }
 
-      setGameState(updatedGameState);
+      if (
+        updatedGameState.table[playerIndex].hand.inHand.length === 0 &&
+        updatedGameState.table[playerIndex].hand.faceUp.length === 0 &&
+        updatedGameState.table[playerIndex].hand.faceDown.length === 0
+      ) {
+        alert(`${updatedGameState.table[playerIndex].name} is out!`);
+      }
 
-      setPlayPile([...playPile, selectedCard]);
+      const playersWithCards = updatedGameState.table.filter(player => 
+        player.hand.inHand.length > 0 ||
+        player.hand.faceUp.length > 0 ||
+        player.hand.faceDown.length > 0
+      );
+
+      if (playersWithCards.length === 1) {
+        alert(`${playersWithCards[0].name} You are the Shithead!`);
+        return;
+      }
+
+      setGameState(updatedGameState);
 
       setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
     }
@@ -64,7 +94,9 @@ export default function Home() {
                           hand={player.hand}
                           playerIndex={index} 
                           isCurrentPlayer={index === currentPlayerIndex}
-                          handleCardClick={handleCardClick}/>
+                          handleCardClick={handleCardClick}
+                          drawPileEmpty={gameState.drawPile.length === 0}
+                        />
                     ))}
                     <h2>Draw Pile: {gameState.drawPile.length} cards left</h2>
                 </>
