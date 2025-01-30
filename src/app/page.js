@@ -24,6 +24,11 @@ export default function Home() {
 
       updatedGameState.table[playerIndex].hand.inHand.splice(cardIndex, 1);
 
+      if (updatedGameState.table[playerIndex].hand.inHand.length < 3 && updatedGameState.drawPile.length > 0) {
+        const newCard = updatedGameState.drawPile.pop();
+        updatedGameState.table[playerIndex].hand.inHand.push(newCard);
+      }
+
       setGameState(updatedGameState);
 
       setPlayPile([...playPile, selectedCard]);
