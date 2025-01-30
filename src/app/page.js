@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deal, isValidMove, hasValidMoves } from "../utils/gameLogic";
+import { deal, isValidMove } from "../utils/gameLogic";
 import Player from "../components/Player";
 import Card from "@/components/Card";
 
@@ -46,7 +46,7 @@ export default function Home() {
     }
 
     if (fromFaceDown) {
-      updatedGameState.table[playerIndex].hand.faceDown = updatedGameState.table[playerIndex].hand.faceDown.filter(card => card.value !== selectedCard.value);
+      updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
     } else if (fromFaceUp) {
       updatedGameState.table[playerIndex].hand.faceUp = updatedGameState.table[playerIndex].hand.faceUp.filter(card => card.value !== selectedCard.value);
     } else {
@@ -54,50 +54,48 @@ export default function Home() {
     }
 
     if (selectedCard.value === "2") {
-      alert("Build it up");
+      alert("Build it up!");
+      setPlayPile([...playPile, selectedCard]);
+      setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+      setGameState(updatedGameState);
+      return;
     } else if (selectedCard.value === "3") {
       alert("Invisible! The next player must play on the card below.");
+      setPlayPile([...playPile, selectedCard]);
+      setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+      setGameState(updatedGameState);
+      return;
     } else if (selectedCard.value === "10") {
-      if (topCard?.value === "10" || playPile.every(card => card.value === "10")) {
-          setPlayPile([...playPile, selectedCard]);
-      } else {
-          let anyPlayerHasTen = gameState.table.some(player =>
-              player.hand.inHand.some(card => card.value === "10")
-          );
-          if (!anyPlayerHasTen) {
-              alert("No more 10s! Last player picks up the pile.");
-              updatedGameState.table[playerIndex].hand.inHand.push(...playPile);
-              setPlayPile([]);
-              setGameState(updatedGameState);
-              return;
-          } else {
-              setPlayPile([...playPile, selectedCard]);
-          }
-      }
+      if (topCard && topCard.value === "10" && selectedCard.value !== "10") {
+        alert("You must play a 10 on a 10! Pick up the pile.");
+        updatedGameState.table[playerIndex].hand.inHand.push(...playPile);
+        setPlayPile([]);
+        setGameState(updatedGameState);
+        setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+        return;
+    }
     } else if (selectedCard.value === "8") {
       alert("Player skipped!");
-      setCurrentPlayerIndex((currentPlayerIndex + 2) % players.length);
+
+      let nextPlayer = (currentPlayerIndex + 2) % players.length;
+
+      setTimeout(() => {
+          setCurrentPlayerIndex(nextPlayer);
+      }, 100); 
+    
+      setGameState(updatedGameState);
+      return;
     } 
 
     setPlayPile([...playPile, selectedCard]);
 
-    const nextPlayerIndex = (currentPlayerIndex + 1) % players.length;
+    const cardsPlayed = selectedCards.length;
 
-    if (!hasValidMoves(updatedGameState.table[nextPlayerIndex].hand.inHand, playPile)) {
-        alert(`${updatedGameState.table[nextPlayerIndex].name} has no valid moves! They must pick up the play pile.`);
-        updatedGameState.table[nextPlayerIndex].hand.inHand.push(...playPile);
-        setPlayPile([]);
-        setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
-        setGameState(updatedGameState);
-        return;
-    }
-
-    while (
-      updatedGameState.drawPile.length > 0 &&
-      updatedGameState.table[playerIndex].hand.inHand.length < 3
-    ) {
-      const newCard = updatedGameState.drawPile.pop();
-      updatedGameState.table[playerIndex].hand.inHand.push(newCard);
+    for (let i = 0; i < cardsPlayed; i++) {
+      if (updatedGameState.drawPile.length > 0) {
+        const newCard = updatedGameState.drawPile.pop();
+        updatedGameState.table[playerIndex].hand.inHand.push(newCard);
+      }
     }
 
     if (
