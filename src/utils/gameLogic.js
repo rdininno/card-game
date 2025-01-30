@@ -22,3 +22,37 @@ export function shuffle(deck) {
     }
     return deck;
 }
+
+export function deal(players) {
+    let deck = shuffle(getDeck());
+    let table = [];
+
+    for (let j = 0; j < players.length; j++) {
+        let playerHand = {
+            faceDown: [],
+            faceUp: [],
+            inHand: []
+        };
+
+        for (let i = 0; i < 9; i++) {
+            let card = deck.pop();
+
+            if (i < 3) {
+                card.position = "face-down";
+                playerHand.faceDown.push(card);
+            } else if (i < 6) {
+                card.position = "face-up";
+                playerHand.faceUp.push(card);
+            } else {
+                card.position = "in-hand";
+                playerHand.inHand.push(card);
+            }
+        }
+
+        table.push({
+            name: players[j],
+            hand: playerHand
+        });
+    }
+    return { table, drawPile: deck };
+}

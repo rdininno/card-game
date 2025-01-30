@@ -1,9 +1,9 @@
 import react from "react";
 
-const Card = ({ suit, value }) => {
+const Card = ({ suit, value, hidden = false }) => {
     return (
         <div>
-            {value} of {suit}
+            {hidden ? "🂠" : `${value} of ${suit}`}
         </div>
     );
 };

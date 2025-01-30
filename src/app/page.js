@@ -1,27 +1,30 @@
-"use client"; 
+"use client";
 
 import { useState } from "react";
-import { getDeck, shuffle } from "../utils/gameLogic";
-import styles from "./page.module.css";
-import Card from "@/components/Card";
+import { deal } from "../utils/gameLogic";
+import Player from "../components/Player";
 
 export default function Home() {
-    const [deck, setDeck] = useState(getDeck());
+    const [gameState, setGameState] = useState(null);
+    const players = ["Robert", "Meghan", "Thomas", "Anthony"];
 
-    const shuffleDeck = () => {
-        setDeck([...shuffle(deck)]);
+    const startGame = () => {
+        setGameState(deal(players));
     };
 
     return (
         <div>
-            <h1>Full Card Deck</h1>
-            <button onClick={shuffleDeck}>Shuffle Deck</button>
-            
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: "10px", marginTop: "20px" }}>
-                {deck.map((card, index) => (
-                    <Card key={index} suit={card.suit} value={card.value} />
-                ))}
-            </div>
+            <h1>Shithead</h1>
+            {!gameState ? (
+                <button onClick={startGame}>Start Game</button>
+            ) : (
+                <>
+                    {gameState.table.map((player, index) => (
+                        <Player key={index} name={player.name} hand={player.hand} />
+                    ))}
+                    <h2>Draw Pile: {gameState.drawPile.length} cards left</h2>
+                </>
+            )}
         </div>
     );
 }
