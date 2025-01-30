@@ -43,16 +43,16 @@ export default function Home() {
     if (playPile.length > 0 && !isValidMove(selectedCard, topCard, playPile)) {
       alert("Invalid move! You must pick up the play pile.");
   
-      const newPlayPile = [...playPile, ...selectedCards];
-      setPlayPile(newPlayPile);
-  
       if (fromFaceDown) {
           updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
       } else if (fromFaceUp) {
           updatedGameState.table[playerIndex].hand.faceUp.splice(cardIndex, 1);
       } else {
-          updatedGameState.table[playerIndex].hand.inHand = updatedGameState.table[playerIndex].hand.inHand.filter(card => card !== selectedCard);
+          updatedGameState.table[playerIndex].hand.inHand = updatedGameState.table[playerIndex].hand.inHand.filter(card => !selectedCards.includes(card));
       }
+  
+      const newPlayPile = [...playPile, ...selectedCards];
+      setPlayPile(newPlayPile);
   
       updatedGameState.table[playerIndex].hand.inHand.push(...newPlayPile);
       setPlayPile([]);

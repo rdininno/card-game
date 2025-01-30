@@ -5,7 +5,7 @@ import Card from "./Card";
 
 const Player = ({ name, hand, playerIndex, isCurrentPlayer, handleCardClick, drawPileEmpty }) => {
     return (
-        <div style={{ border: "1px solid black", padding: "10px", marginBottom: "20px" }}>
+        <div style={{ border: "1px solid black", padding: "5px", marginBottom: "5px" }}>
             <h2>{name} {isCurrentPlayer ? "(Your Turn)" : ""}</h2>
 
             <h3>Face-Down Cards:</h3>
