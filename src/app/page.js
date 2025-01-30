@@ -26,11 +26,13 @@ export default function Home() {
     if (fromFaceDown) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceDown[cardIndex];
       selectedCards = [selectedCard];
-
+    
       updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
     } else if (fromFaceUp) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceUp[cardIndex];
-      selectedCards = updatedGameState.table[playerIndex].hand.faceUp.filter(card => card.value === selectedCard.value);
+      selectedCards = [selectedCard];
+    
+      updatedGameState.table[playerIndex].hand.faceUp.splice(cardIndex, 1);
     } else {
       selectedCard = updatedGameState.table[playerIndex].hand.inHand[cardIndex];
       selectedCards = updatedGameState.table[playerIndex].hand.inHand.filter(card => card.value === selectedCard.value);
@@ -39,12 +41,25 @@ export default function Home() {
     const topCard = playPile.length > 0 ? playPile[playPile.length - 1] : null;
 
     if (playPile.length > 0 && !isValidMove(selectedCard, topCard, playPile)) {
-        alert("Invalid move! You must pick up the play pile.");
-        updatedGameState.table[playerIndex].hand.inHand.push(...playPile);
-        setPlayPile([]);
-        setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
-        setGameState(updatedGameState);
-        return;
+      alert("Invalid move! You must pick up the play pile.");
+  
+      const newPlayPile = [...playPile, ...selectedCards];
+      setPlayPile(newPlayPile);
+  
+      if (fromFaceDown) {
+          updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
+      } else if (fromFaceUp) {
+          updatedGameState.table[playerIndex].hand.faceUp.splice(cardIndex, 1);
+      } else {
+          updatedGameState.table[playerIndex].hand.inHand = updatedGameState.table[playerIndex].hand.inHand.filter(card => card !== selectedCard);
+      }
+  
+      updatedGameState.table[playerIndex].hand.inHand.push(...newPlayPile);
+      setPlayPile([]);
+  
+      setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+      setGameState(updatedGameState);
+      return;
     }
 
     if (fromFaceDown) {
