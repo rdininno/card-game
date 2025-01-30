@@ -26,6 +26,8 @@ export default function Home() {
     if (fromFaceDown) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceDown[cardIndex];
       selectedCards = [selectedCard];
+
+      updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
     } else if (fromFaceUp) {
       selectedCard = updatedGameState.table[playerIndex].hand.faceUp[cardIndex];
       selectedCards = updatedGameState.table[playerIndex].hand.faceUp.filter(card => card.value === selectedCard.value);
@@ -82,12 +84,12 @@ export default function Home() {
       setTimeout(() => {
           setCurrentPlayerIndex(nextPlayer);
       }, 100); 
-    
+
       setGameState(updatedGameState);
       return;
     } 
 
-    setPlayPile([...playPile, selectedCard]);
+    setPlayPile([...playPile, ...selectedCards]);
 
     const cardsPlayed = selectedCards.length;
 
