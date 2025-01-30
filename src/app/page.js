@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deal, isValidMove } from "../utils/gameLogic";
+import { deal, isValidMove, getCardValue } from "../utils/gameLogic";
 import Player from "../components/Player";
 import Card from "@/components/Card";
 
@@ -55,6 +55,8 @@ export default function Home() {
       setPlayPile(newPlayPile);
   
       updatedGameState.table[playerIndex].hand.inHand.push(...newPlayPile);
+
+      updatedGameState.table[playerIndex].hand.inHand.sort((a, b) => getCardValue(a) - getCardValue(b));
       setPlayPile([]);
   
       setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
