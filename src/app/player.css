@@ -1,0 +1,34 @@
+.player {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+.player-hand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+
+.player-cards {
+    display: flex;
+    gap: 10px;
+    position: relative;
+}
+
+.faceup {
+    position: relative;
+    top: 20px;
+    z-index: 2;
+}
+
+.facedown {
+    position: absolute;
+    z-index: 1;
+}
+
+.inhand {
+    margin-top: 40px;
+}
