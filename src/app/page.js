@@ -149,7 +149,7 @@ export default function Home() {
       <div>
           <h1>Shithead</h1>
           <h3>Play Pile:</h3>
-          <div style={{ display: "flex", gap: "10px", marginBottom: "20px" }}>
+          <div>
               {playPile.length > 0 ? (
                   <Card suit={playPile[playPile.length - 1].suit} value={playPile[playPile.length - 1].value} />
               ) : (
