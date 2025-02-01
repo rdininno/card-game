@@ -29,6 +29,35 @@
     z-index: 1;
 }
 
+.facedown .card {
+    background: repeating-linear-gradient(
+        45deg,
+        #f8f8f8,
+        #f8f8f8 10px,
+        #e0e0e0 10px,
+        #e0e0e0 20px
+    );
+}
+
 .inhand {
     margin-top: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;    
+}
+
+.inhand .card {
+    margin-left: -30px;
+    transition: all .3s;
+}
+
+.inhand .card:first-child {
+    margin-left: 0;
+}
+
+.inhand .card:hover {
+    transform: translateY(-5px) translateX(5px);
+    z-index: 100;
+    box-shadow: 4px 4px 20px rgba(0, 0, 0, 0.3);
 }

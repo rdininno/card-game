@@ -150,29 +150,30 @@ export default function Home() {
   return (
       <div className="gametable">
         <div className="player-zone">
-          <div className="playpile">
-              {playPile.length > 0 ? (
-                  <Card suit={playPile[playPile.length - 1].suit} value={playPile[playPile.length - 1].value} />
-              ) : (
-                  <p>No cards played yet</p>
-              )}
-          </div>
           {!gameState ? (
               <button onClick={startGame} className="btn start-game">Start Game</button>
           ) : (
               <>
-                  {gameState.table.map((player, index) => (
-                      <Player 
-                        key={index}
-                        name={player.name}
-                        hand={player.hand}
-                        playerIndex={index} 
-                        isCurrentPlayer={index === currentPlayerIndex}
-                        handleCardClick={handleCardClick}
-                        drawPileEmpty={gameState.drawPile.length === 0}
-                      />
-                  ))}
-                  <h2 className="drawpile">Draw Pile: {gameState.drawPile.length} cards left</h2>
+                <div className="playpile">
+                  {playPile.length > 0 ? (
+                      <Card suit={playPile[playPile.length - 1].suit} value={playPile[playPile.length - 1].value} />
+                  ) : (
+                      <p>No cards played yet</p>
+                  )}
+                </div>
+
+                {gameState.table.map((player, index) => (
+                    <Player 
+                      key={index}
+                      name={player.name}
+                      hand={player.hand}
+                      playerIndex={index} 
+                      isCurrentPlayer={index === currentPlayerIndex}
+                      handleCardClick={handleCardClick}
+                      drawPileEmpty={gameState.drawPile.length === 0}
+                    />
+                ))}
+                <h2 className="drawpile">Draw Pile: {gameState.drawPile.length} cards left</h2>
               </>
           )}
         </div>
