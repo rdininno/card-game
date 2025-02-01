@@ -93,9 +93,11 @@ export default function Home() {
         setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
     }
     } else if (selectedCard.value === "8") {
-      alert("Player skipped!");
+      let numEights = selectedCards.filter(card => card.value === "8").length;
+      
+      alert(`Player skipped ${numEights} turn(s)!`);
 
-      let nextPlayer = (currentPlayerIndex + 2) % players.length;
+      let nextPlayer = (currentPlayerIndex + (numEights + 1)) % players.length;
 
       setTimeout(() => {
           setCurrentPlayerIndex(nextPlayer);
