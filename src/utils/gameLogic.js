@@ -68,7 +68,9 @@ export function getCardValue(card) {
 
 function getLastVisibleCard(playPile) { 
     for (let i = playPile.length - 1; i >= 0; i--) {
-        if (playPile[i].value !== "3") return playPile[i];
+        if (playPile[i].value !== "3") {
+            return playPile[i];
+        }
     }
     return playPile[0];
 }
@@ -81,11 +83,12 @@ export function isValidMove(selectedCard, topCard, playPile) {
 
     if (selectedCard.value === "2" && topCard.value !== "10") return true;
     if (selectedCard.value === "3" && topCard.value !== "10") return true;
-
-    if (topCard.value === "7") {
+    
+    let lastVisibleCard = getLastVisibleCard(playPile);
+    
+    if (topCard.value === "7" || lastVisibleCard.value === "7") {
         return getCardValue(selectedCard) <= 7;
     }
 
-    let lastVisibleCard = getLastVisibleCard(playPile);
     return getCardValue(selectedCard) >= getCardValue(lastVisibleCard);
 }
