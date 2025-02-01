@@ -4,6 +4,8 @@ import { useState } from "react";
 import { deal, isValidMove, getCardValue } from "../utils/gameLogic";
 import Player from "../components/Player";
 import Card from "@/components/Card";
+import "../app/gametable.css";
+
 
 const players = ["Robert", "Meghan", "Thomas", "Anthony"];
 
@@ -146,10 +148,9 @@ export default function Home() {
   };
 
   return (
-      <div>
-          <h1>Shithead</h1>
-          <h3>Play Pile:</h3>
-          <div>
+      <div className="gametable">
+        <div className="player-zone">
+          <div className="playpile">
               {playPile.length > 0 ? (
                   <Card suit={playPile[playPile.length - 1].suit} value={playPile[playPile.length - 1].value} />
               ) : (
@@ -157,7 +158,7 @@ export default function Home() {
               )}
           </div>
           {!gameState ? (
-              <button onClick={startGame}>Start Game</button>
+              <button onClick={startGame} className="btn start-game">Start Game</button>
           ) : (
               <>
                   {gameState.table.map((player, index) => (
@@ -171,9 +172,10 @@ export default function Home() {
                         drawPileEmpty={gameState.drawPile.length === 0}
                       />
                   ))}
-                  <h2>Draw Pile: {gameState.drawPile.length} cards left</h2>
+                  <h2 className="drawpile">Draw Pile: {gameState.drawPile.length} cards left</h2>
               </>
           )}
+        </div>
       </div>
   );
 }
