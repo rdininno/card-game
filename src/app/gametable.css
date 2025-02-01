@@ -22,3 +22,8 @@
     align-items: center;
     text-align: center;
 }
+
+.start-game {
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 1;
+}
