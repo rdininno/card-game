@@ -110,6 +110,16 @@ export default function Home() {
     
       alert(`Player skipped ${numEights} turn(s)!`);
 
+      setPlayPile([...playPile, ...selectedCards]);
+
+      const playerHand = updatedGameState.table[playerIndex].hand.inHand;
+    
+      if (updatedGameState.drawPile.length > 0) {
+        if (playerHand.length < 3) {
+            playerHand.push(updatedGameState.drawPile.pop());
+        }
+      }
+
       let nextPlayer = getNextPlayerIndex(currentPlayerIndex, updatedGameState, numEights);
 
       setTimeout(() => {
