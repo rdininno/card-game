@@ -122,6 +122,18 @@ export default function Home() {
 
     setPlayPile([...playPile, ...selectedCards]);
 
+    const newPile = [...playPile, ...selectedCards];
+    const lastFourCards = newPile.slice(-4);
+
+    if (lastFourCards.length === 4 && lastFourCards.every(card => card.value === lastFourCards[0].value)) {
+      alert("🔥 Pile burned! All cards discarded. You get another turn!");
+
+      setPlayPile([]);
+
+      setGameState(updatedGameState);
+      return;
+    }
+
     const playerHand = updatedGameState.table[playerIndex].hand.inHand;
     const cardsPlayed = selectedCards.length;
     
@@ -154,7 +166,6 @@ export default function Home() {
       alert(`${playersWithCards[0].name} You are the Shithead!`);
       return;
     }
-
   
     setCurrentPlayerIndex(getNextPlayerIndex(currentPlayerIndex, updatedGameState));
 
