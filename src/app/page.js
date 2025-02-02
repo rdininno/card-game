@@ -174,9 +174,18 @@ export default function Home() {
               <>
                 <div className="playpile">
                   {playPile.length > 0 ? (
-                      <Card suit={playPile[playPile.length - 1].suit} value={playPile[playPile.length - 1].value} />
+                    <>
+                      {playPile.slice(-4).map((card, index) => (
+                        <Card 
+                          key={index} 
+                          suit={card.suit} 
+                          value={card.value} 
+                          className={`pile-card pile-card-${index}`} 
+                        />
+                      ))}
+                    </>
                   ) : (
-                      <p>No cards played yet</p>
+                    <p>No cards played yet</p>
                   )}
                 </div>
 

@@ -14,6 +14,10 @@
     text-align: center;
 }
 
+.playpile .card {
+    margin-left: -60px;
+}
+
 .drawpile {
     grid-column: 2 / span 1;
     grid-row: 2 / span 1;
