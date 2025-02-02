@@ -85,10 +85,18 @@ export function isValidMove(selectedCard, topCard, playPile) {
     if (selectedCard.value === "3" && topCard.value !== "10") return true;
     
     let lastVisibleCard = getLastVisibleCard(playPile);
-    
+
     if (topCard.value === "7" || lastVisibleCard.value === "7") {
         return getCardValue(selectedCard) <= 7;
     }
 
     return getCardValue(selectedCard) >= getCardValue(lastVisibleCard);
+}
+
+export function hasCards(player) {
+    return (
+        player.hand.inHand.length > 0 ||
+        player.hand.faceUp.length > 0 ||
+        player.hand.faceDown.length > 0
+    );
 }

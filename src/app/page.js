@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deal, isValidMove, getCardValue } from "../utils/gameLogic";
+import { deal, isValidMove, getCardValue, hasCards } from "../utils/gameLogic";
 import Player from "../components/Player";
 import Card from "@/components/Card";
 import "../app/gametable.css";
@@ -13,6 +13,18 @@ export default function Home() {
   const [gameState, setGameState] = useState(null);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [playPile, setPlayPile] = useState([]);
+
+  const getNextPlayerIndex = (currentIndex, gameState, numEights = 0) => {
+    let nextIndex = (currentIndex + numEights + 1) % players.length;
+
+    while (!hasCards(gameState.table[nextIndex])) {
+        nextIndex = (nextIndex + 1) % players.length;
+
+        if (nextIndex === currentIndex) break;
+    }
+
+    return nextIndex;
+  };
   
   const handleCardClick = (playerIndex, cardIndex, fromFaceUp = false, fromFaceDown = false) => {
     if (playerIndex !== currentPlayerIndex) {
@@ -61,7 +73,8 @@ export default function Home() {
       updatedGameState.table[playerIndex].hand.inHand.sort((a, b) => getCardValue(a) - getCardValue(b));
       setPlayPile([]);
   
-      setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
+      setCurrentPlayerIndex(getNextPlayerIndex(currentPlayerIndex, updatedGameState));
+
       setGameState(updatedGameState);
       return;
     }
@@ -94,16 +107,17 @@ export default function Home() {
     }
     } else if (selectedCard.value === "8") {
       let numEights = selectedCards.filter(card => card.value === "8").length;
-      
+    
       alert(`Player skipped ${numEights} turn(s)!`);
 
-      let nextPlayer = (currentPlayerIndex + (numEights + 1)) % players.length;
+      let nextPlayer = getNextPlayerIndex(currentPlayerIndex, updatedGameState, numEights);
 
       setTimeout(() => {
-          setCurrentPlayerIndex(nextPlayer);
-      }, 100); 
+        setCurrentPlayerIndex(nextPlayer);
+      }, 100);
 
       setGameState(updatedGameState);
+      return;
     } 
 
     setPlayPile([...playPile, ...selectedCards]);
@@ -141,8 +155,10 @@ export default function Home() {
       return;
     }
 
+  
+    setCurrentPlayerIndex(getNextPlayerIndex(currentPlayerIndex, updatedGameState));
+
     setGameState(updatedGameState);
-    setCurrentPlayerIndex((currentPlayerIndex + 1) % players.length);
   } 
 
   const startGame = () => {
