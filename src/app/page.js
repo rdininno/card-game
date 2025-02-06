@@ -112,6 +112,10 @@ export default function Home() {
 
       setPlayPile([...playPile, ...selectedCards]);
 
+      if (checkAndBurnPile(playPile, selectedCards, setPlayPile, setGameState, updatedGameState)) {
+        return;
+      }
+
       const playerHand = updatedGameState.table[playerIndex].hand.inHand;
     
       if (updatedGameState.drawPile.length > 0) {
@@ -132,15 +136,7 @@ export default function Home() {
 
     setPlayPile([...playPile, ...selectedCards]);
 
-    const newPile = [...playPile, ...selectedCards];
-    const lastFourCards = newPile.slice(-4);
-
-    if (lastFourCards.length === 4 && lastFourCards.every(card => card.value === lastFourCards[0].value)) {
-      alert("🔥 Pile burned! All cards discarded. You get another turn!");
-
-      setPlayPile([]);
-
-      setGameState(updatedGameState);
+    if (checkAndBurnPile(playPile, selectedCards, setPlayPile, setGameState, updatedGameState)) {
       return;
     }
 

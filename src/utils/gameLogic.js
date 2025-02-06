@@ -100,3 +100,18 @@ export function hasCards(player) {
         player.hand.faceDown.length > 0
     );
 }
+
+export function checkAndBurnPile(playPile, selectedCards, setPlayPile, setGameState, updatedGameState) {
+    const newPile = [...playPile, ...selectedCards];
+    const lastFourCards = newPile.slice(-4);
+
+    if (lastFourCards.length === 4 && lastFourCards.every(card => card.value === lastFourCards[0].value)) {
+        alert("🔥 Pile burned! All cards discarded. You get another turn!");
+
+        setPlayPile([]);
+        setGameState(updatedGameState);
+        return true;
+    }
+
+    return false;
+}
