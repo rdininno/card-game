@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { deal, isValidMove, getCardValue, hasCards } from "../utils/gameLogic";
+import { deal, isValidMove, getCardValue, hasCards, checkAndBurnPile, removePlayerFromGame, getNextPlayerIndex } from "../utils/gameLogic";
 import Player from "../components/Player";
 import Card from "@/components/Card";
 import "../app/gametable.css";
@@ -13,18 +13,6 @@ export default function Home() {
   const [gameState, setGameState] = useState(null);
   const [currentPlayerIndex, setCurrentPlayerIndex] = useState(0);
   const [playPile, setPlayPile] = useState([]);
-
-  const getNextPlayerIndex = (currentIndex, gameState, numEights = 0) => {
-    let nextIndex = (currentIndex + numEights + 1) % players.length;
-
-    while (!hasCards(gameState.table[nextIndex])) {
-        nextIndex = (nextIndex + 1) % players.length;
-
-        if (nextIndex === currentIndex) break;
-    }
-
-    return nextIndex;
-  };
   
   const handleCardClick = (playerIndex, cardIndex, fromFaceUp = false, fromFaceDown = false) => {
     if (playerIndex !== currentPlayerIndex) {
@@ -154,24 +142,7 @@ export default function Home() {
       }
     }
 
-    if (
-      updatedGameState.table[playerIndex].hand.inHand.length === 0 &&
-      updatedGameState.table[playerIndex].hand.faceUp.length === 0 &&
-      updatedGameState.table[playerIndex].hand.faceDown.length === 0
-    ) {
-      alert(`${updatedGameState.table[playerIndex].name} is out!`);
-    }
-
-    const playersWithCards = updatedGameState.table.filter(player => 
-      player.hand.inHand.length > 0 ||
-      player.hand.faceUp.length > 0 ||
-      player.hand.faceDown.length > 0
-    );
-
-    if (playersWithCards.length === 1) {
-      alert(`${playersWithCards[0].name} You are the Shithead!`);
-      return;
-    }
+    removePlayerFromGame(playerIndex, updatedGameState, setGameState, setCurrentPlayerIndex);
   
     setCurrentPlayerIndex(getNextPlayerIndex(currentPlayerIndex, updatedGameState));
 

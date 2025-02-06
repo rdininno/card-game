@@ -101,7 +101,27 @@ export function hasCards(player) {
     );
 }
 
-export function checkAndBurnPile(playPile, selectedCards, setPlayPile, setGameState, updatedGameState) {
+export function getNextPlayerIndex(currentIndex, gameState, numEights = 0) {
+    let nextIndex = (currentIndex + numEights + 1) % gameState.table.length;
+
+    while (!hasCards(gameState.table[nextIndex])) {
+        nextIndex = (nextIndex + 1) % gameState.table.length;
+
+        if (nextIndex === currentIndex) break;
+    }
+
+    return nextIndex;
+}
+
+export function checkAndBurnPile(
+    playPile, 
+    selectedCards, 
+    setPlayPile, 
+    setGameState, 
+    updatedGameState, 
+    currentPlayerIndex, 
+    setCurrentPlayerIndex
+) {
     const newPile = [...playPile, ...selectedCards];
     const lastFourCards = newPile.slice(-4);
 
@@ -109,9 +129,51 @@ export function checkAndBurnPile(playPile, selectedCards, setPlayPile, setGameSt
         alert("🔥 Pile burned! All cards discarded. You get another turn!");
 
         setPlayPile([]);
+
+        if (removePlayerFromGame(currentPlayerIndex, updatedGameState, setGameState, setCurrentPlayerIndex)) {
+            return true;
+        }
+
         setGameState(updatedGameState);
         return true;
     }
 
+    return false;
+}
+
+export function removePlayerFromGame(currentPlayerIndex, updatedGameState, setGameState, setCurrentPlayerIndex) {
+    if (currentPlayerIndex >= updatedGameState.table.length) {
+        return false;
+    }
+
+    const player = updatedGameState.table[currentPlayerIndex];
+
+    if (!player || !player.hand) {
+        return false;
+    }
+
+    if (
+        player.hand.inHand.length === 0 &&
+        player.hand.faceUp.length === 0 &&
+        player.hand.faceDown.length === 0
+    ) {
+        alert(`${player.name} is out of the game!`);
+
+        updatedGameState.table.splice(currentPlayerIndex, 1);
+
+        if (updatedGameState.table.length === 1) {
+            alert(`${updatedGameState.table[0].name}, you are the Shithead!`);
+            setGameState(updatedGameState);
+            return true;
+        }
+
+        const nextPlayer = getNextPlayerIndex(
+            Math.max(0, currentPlayerIndex - 1), 
+            updatedGameState
+        );
+        setCurrentPlayerIndex(nextPlayer);
+    }
+
+    setGameState(updatedGameState);
     return false;
 }
