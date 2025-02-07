@@ -22,6 +22,7 @@ export default function Home() {
 
     const updatedGameState = {...gameState};
 
+    // select card and remove from hand
     let selectedCard;
     let selectedCards = [];
 
@@ -42,6 +43,7 @@ export default function Home() {
 
     const topCard = playPile.length > 0 ? playPile[playPile.length - 1] : null;
 
+    //invalid move
     if (playPile.length > 0 && !isValidMove(selectedCard, topCard, playPile)) {
       alert("Invalid move! You must pick up the play pile.");
   
@@ -65,8 +67,9 @@ export default function Home() {
 
       setGameState(updatedGameState);
       return;
-    }
+  }
 
+    // remove multiple cards
     if (fromFaceDown) {
       updatedGameState.table[playerIndex].hand.faceDown.splice(cardIndex, 1);
     } else if (fromFaceUp) {
@@ -75,6 +78,7 @@ export default function Home() {
       updatedGameState.table[playerIndex].hand.inHand = updatedGameState.table[playerIndex].hand.inHand.filter(card => card.value !== selectedCard.value);
     }
 
+    //special cards
     if (selectedCard.value === "2") {
       alert("Build it up!");
       setPlayPile([...playPile, selectedCard]);
@@ -131,6 +135,7 @@ export default function Home() {
     const playerHand = updatedGameState.table[playerIndex].hand.inHand;
     const cardsPlayed = selectedCards.length;
     
+    //draw pile
     if (updatedGameState.drawPile.length > 0) {
       if (playerHand.length >= 3) {
         playerHand.push(updatedGameState.drawPile.pop());
